@@ -9,7 +9,7 @@ import com.google.gwt.user.client.rpc.ServiceDefTarget;
 /**
  * GWT JUnit tests must extend GWTTestCase.
  */
-public class gwtTest extends GWTTestCase {
+public class starterTest extends GWTTestCase {
 
   /**
    * Must refer to a valid module that sources this class.
@@ -38,7 +38,7 @@ public class gwtTest extends GWTTestCase {
     // Create the service that we will test.
     GreetingServiceAsync greetingService = GWT.create(GreetingService.class);
     ServiceDefTarget target = (ServiceDefTarget) greetingService;
-    target.setServiceEntryPoint(GWT.getModuleBaseURL() + "gwt/greet");
+    target.setServiceEntryPoint(GWT.getModuleBaseURL() + "Starter/greet");
 
     // Since RPC calls are asynchronous, we will need to wait for a response
     // after this test method returns. This line tells the test runner to wait
