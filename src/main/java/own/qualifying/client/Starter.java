@@ -12,6 +12,7 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import own.qualifying.utils.QuickSort;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -21,11 +22,16 @@ public class Starter implements EntryPoint {
   //useless
   private final GreetingServiceAsync greetingService = GWT.create(GreetingService.class);
   private Integer[] savedButtons;
+  private QuickSort sorting;
 
   public void onModuleLoad() {
 
     final Button sendButton = new Button("Send");
     final TextBox numbersField = new TextBox();
+    final Label question = new Label("How many numbers to display");
+
+    final Button sort = new Button("Sort");
+    final Button reset = new Button("Reset");
 
     numbersField.addKeyPressHandler(event -> {
       if(event.getNativeEvent().getKeyCode()!=KeyCodes.KEY_DELETE &&
@@ -42,6 +48,7 @@ public class Starter implements EntryPoint {
 
     RootPanel.get("nameFieldContainer").add(numbersField);
     RootPanel.get("sendButtonContainer").add(sendButton);
+    RootPanel.get("question").add(question);
 
     numbersField.setFocus(true);
     numbersField.selectAll();
@@ -53,7 +60,7 @@ public class Starter implements EntryPoint {
        * Fired when the user clicks on the sendButton.
       */
       public void onClick(ClickEvent event) {
-
+        sorting = new QuickSort(savedButtons);
         Random random = new Random();
         String inputedText = numbersField.getText(); // this works!!
         int numberOfButtons = Integer.parseInt(inputedText);
@@ -66,6 +73,7 @@ public class Starter implements EntryPoint {
 
         RootPanel.get("nameFieldContainer").clear();
         RootPanel.get("sendButtonContainer").clear();
+        //RootPanel.get("question").clear();
 
         // so , after click to sort button we have to delete old buttons and create new with same numbers but in correct order
 
@@ -76,10 +84,15 @@ public class Starter implements EntryPoint {
           RootPanel.get("nameFieldContainer").add(new Button("" + savedButtons[i]));
         }
 
-        Button reset = new Button("reset");
+
         reset.addClickHandler(ev -> Window.Location.reload());
-        Button sort = new Button("Sort");
-        sort.addClickHandler(e -> {}); // function to sort element and display that in correct order
+        sort.addClickHandler(e -> {
+          savedButtons = sorting.getResultArray();
+          RootPanel.get("nameFieldContainer").clear();
+          for(int i = 0; i < savedButtons.length; i++){
+            RootPanel.get("nameFieldContainer").add(new Button("" + savedButtons[i]));
+          }
+        }); // function to sort element and display that in correct order
         RootPanel.get("functionality").add(reset);
         RootPanel.get("functionality").add(sort);
       }
