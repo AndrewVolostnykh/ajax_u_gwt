@@ -1,14 +1,10 @@
 <!doctype html>
-<!-- The DOCTYPE declaration above will set the     -->
-<!-- browser's rendering engine into                -->
-<!-- "Standards Mode". Replacing this declaration   -->
-<!-- with a "Quirks Mode" doctype is not supported. -->
 
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <link type="text/css" rel="stylesheet" href="gwt.css">
-    <title>Web Application Starter Project</title>
+    <title>Ajax u gwt</title>
     <script type="text/javascript" language="javascript" src="gwt/gwt.nocache.js"></script>
   </head>
 
@@ -21,10 +17,11 @@
     </noscript>
 
     <h1>Ajax u gwt</h1>
-
+<!--
     <table align="center">
+
       <tr>
-        <td colspan="2" style="font-weight:bold;">Please enter your name:</td>        
+        <td id="question" colspan="2" style="font-weight:bold;">How many numbers to display?</td>
       </tr>
       <tr>
         <td id="nameFieldContainer"></td>
@@ -34,6 +31,12 @@
         <td colspan="2" style="color:red;" id="errorLabelContainer"></td>
       </tr>
     </table>
+-->
+    <div id="question">How many numbers to display</div>
+    <div id="nameFieldContainer"></div>
+    <div id="sendButtonContainer"></div>
+    <div id="functionality"></div>
+    <div id="errorLabelContainer"></div>
   <div id="inputWord"></div>
   </body>
 </html>
