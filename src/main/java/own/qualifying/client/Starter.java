@@ -3,24 +3,18 @@ package own.qualifying.client;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
-import own.qualifying.shared.FieldVerifier;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import own.qualifying.utils.QuickSort;
+import own.qualifying.shared.QuickSort;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 public class Starter implements EntryPoint {
 
   //useless
-  private final GreetingServiceAsync greetingService = GWT.create(GreetingService.class);
+  //private final GreetingServiceAsync greetingService = GWT.create(GreetingService.class);
+
   private Integer[] savedButtons;
   private QuickSort sorting;
 
@@ -33,7 +27,7 @@ public class Starter implements EntryPoint {
     final Button sort = new Button("Sort");
     final Button reset = new Button("Reset");
 
-    numbersField.addKeyPressHandler(event -> {
+    numbersField.addKeyPressHandler(event -> { // only numbers checker
       if(event.getNativeEvent().getKeyCode()!=KeyCodes.KEY_DELETE &&
               event.getNativeEvent().getKeyCode()!=KeyCodes.KEY_BACKSPACE &&
               event.getNativeEvent().getKeyCode()!=KeyCodes.KEY_LEFT &&
@@ -53,63 +47,50 @@ public class Starter implements EntryPoint {
     numbersField.setFocus(true);
     numbersField.selectAll();
 
+    //Event listener for click on send button
+    sendButton.addClickHandler(event -> {
 
-    // Create a handler for the sendButton and numbersField
-    class MyHandler implements ClickHandler, KeyUpHandler {
-      /**
-       * Fired when the user clicks on the sendButton.
-      */
-      public void onClick(ClickEvent event) {
-        sorting = new QuickSort(savedButtons);
-        Random random = new Random();
-        String inputedText = numbersField.getText(); // this works!!
-        int numberOfButtons = Integer.parseInt(inputedText);
-        savedButtons = new Integer[numberOfButtons];
+      Random random = new Random();
+      String inputedText = numbersField.getText(); // this works!!
+      int numberOfButtons = Integer.parseInt(inputedText);
+      savedButtons = new Integer[numberOfButtons];
 
 
-        if(inputedText.isEmpty()){ // check for empty string
-          return;
-        }
-
-        RootPanel.get("nameFieldContainer").clear();
-        RootPanel.get("sendButtonContainer").clear();
-        //RootPanel.get("question").clear();
-
-        // so , after click to sort button we have to delete old buttons and create new with same numbers but in correct order
-
-        int tempRandom;
-        for(int i = 0; i < numberOfButtons; i++){
-          tempRandom = random.nextInt(1000);
-          savedButtons[i] = tempRandom;
-          RootPanel.get("nameFieldContainer").add(new Button("" + savedButtons[i]));
-        }
-
-
-        reset.addClickHandler(ev -> Window.Location.reload());
-        sort.addClickHandler(e -> {
-          savedButtons = sorting.getResultArray();
-          RootPanel.get("nameFieldContainer").clear();
-          for(int i = 0; i < savedButtons.length; i++){
-            RootPanel.get("nameFieldContainer").add(new Button("" + savedButtons[i]));
-          }
-        }); // function to sort element and display that in correct order
-        RootPanel.get("functionality").add(reset);
-        RootPanel.get("functionality").add(sort);
+      if (inputedText.isEmpty()) { // check for empty string
+        return;
       }
 
-      // useless
-      public void onKeyUp(KeyUpEvent event) {
-        if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+      RootPanel.get("nameFieldContainer").clear();
+      RootPanel.get("sendButtonContainer").clear();
+      RootPanel.get("question").clear();
 
-        }
+      // so , after click to sort button we have to delete old buttons
+      // and create new with same numbers but in correct order
+
+      int tempRandom;
+      for (int i = 0; i < numberOfButtons; i++) {
+        tempRandom = random.nextInt(1000);
+        savedButtons[i] = tempRandom;
+        RootPanel.get("nameFieldContainer").add(new Button("" + savedButtons[i]));
       }
-    }
 
-    // Add a handler to send the name to the server
-    MyHandler handler = new MyHandler();
-    sendButton.addClickHandler(handler);
-    numbersField.addKeyUpHandler(handler);
+      RootPanel.get("functionality").add(reset);
+      RootPanel.get("functionality").add(sort);
+    });
 
+    reset.addClickHandler(event -> Window.Location.reload());
+
+    sort.addClickHandler(event -> {
+      sorting = new QuickSort(savedButtons);
+      savedButtons = sorting.getResultArray();
+
+      RootPanel.get("nameFieldContainer").clear();
+      RootPanel.get("question").clear();
+
+      for(int i : savedButtons){
+        RootPanel.get("nameFieldContainer").add(new Button("" + i));
+      }
+    });
   }
 
 }
