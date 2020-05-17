@@ -13,17 +13,14 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import java.util.ArrayList;
 import java.util.Random;
 
-/**
- * Entry point classes define <code>onModuleLoad()</code>.
- */
 public class Starter implements EntryPoint {
-  private static final String SERVER_ERROR = "An error occurred while "
-      + "attempting to contact the server. Please check your network "
-      + "connection and try again.";
 
+  //useless
   private final GreetingServiceAsync greetingService = GWT.create(GreetingService.class);
+  private Integer[] savedButtons;
 
   public void onModuleLoad() {
 
@@ -56,9 +53,12 @@ public class Starter implements EntryPoint {
        * Fired when the user clicks on the sendButton.
       */
       public void onClick(ClickEvent event) {
+
         Random random = new Random();
         String inputedText = numbersField.getText(); // this works!!
         int numberOfButtons = Integer.parseInt(inputedText);
+        savedButtons = new Integer[numberOfButtons];
+
 
         if(inputedText.isEmpty()){ // check for empty string
           return;
@@ -67,13 +67,21 @@ public class Starter implements EntryPoint {
         RootPanel.get("nameFieldContainer").clear();
         RootPanel.get("sendButtonContainer").clear();
 
+        // so , after click to sort button we have to delete old buttons and create new with same numbers but in correct order
+
+        int tempRandom;
         for(int i = 0; i < numberOfButtons; i++){
-          RootPanel.get("nameFieldContainer").add(new Button("" + random.nextInt(1000)));
+          tempRandom = random.nextInt(1000);
+          savedButtons[i] = tempRandom;
+          RootPanel.get("nameFieldContainer").add(new Button("" + savedButtons[i]));
         }
-        
+
         Button reset = new Button("reset");
         reset.addClickHandler(ev -> Window.Location.reload());
+        Button sort = new Button("Sort");
+        sort.addClickHandler(e -> {}); // function to sort element and display that in correct order
         RootPanel.get("functionality").add(reset);
+        RootPanel.get("functionality").add(sort);
       }
 
       // useless
